@@ -22,9 +22,7 @@ const ClerkStatusUpdater = () => {
   return null
 }
 
-type ClerkOptions =
-  | { publishableKey: string; frontendApi?: never }
-  | { publishableKey?: never; frontendApi: string }
+type ClerkOptions = { publishableKey: string }
 
 interface Props {
   children: React.ReactNode
@@ -39,7 +37,8 @@ const ClerkProviderWrapper = ({
   return (
     <ClerkProvider
       {...clerkOptions}
-      navigate={(to) => reauthenticate().then(() => navigate(to))}
+      routerPush={(to) => reauthenticate().then(() => navigate(to))}
+      routerPush={(to) => reauthenticate().then(() => navigate(to, { replace: true }))}
     >
       {children}
       <ClerkStatusUpdater />
@@ -49,12 +48,8 @@ const ClerkProviderWrapper = ({
 
 export const AuthProvider = ({ children }: Props) => {
   const publishableKey = process.env.CLERK_PUBLISHABLE_KEY
-  const frontendApi =
-    process.env.CLERK_FRONTEND_API_URL || process.env.CLERK_FRONTEND_API
 
-  const clerkOptions: ClerkOptions = publishableKey
-    ? { publishableKey }
-    : { frontendApi }
+  const clerkOptions: ClerkOptions = { publishableKey }
 
   return (
     <ClerkRwAuthProvider>

@@ -111,7 +111,11 @@ export const AuthProvider = ({ children }: Props) => {
   }
 
   return (
-    <ClerkProvider frontendApi={frontendApi} navigate={(to) => navigate(to)}>
+    <ClerkProvider
+      publishableKey={frontendApi}
+      routerPush={(to) => navigate(to)}
+      routerReplace={(to) => navigate(to, { replace: true })}
+    >
       <ClerkRwAuthProvider>
         <ClerkLoaded>{children}</ClerkLoaded>
         <ClerkStatusUpdater />

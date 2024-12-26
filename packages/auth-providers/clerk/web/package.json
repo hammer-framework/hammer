@@ -52,8 +52,8 @@
     "@redwoodjs/auth": "workspace:*"
   },
   "devDependencies": {
-    "@clerk/clerk-react": "4.32.3",
-    "@clerk/types": "3.65.3",
+    "@clerk/clerk-react": "5.12.0",
+    "@clerk/types": "4.26.0",
     "@redwoodjs/framework-tools": "workspace:*",
     "@types/react": "^18.2.55",
     "concurrently": "8.2.2",
@@ -64,7 +64,7 @@
     "vitest": "2.0.5"
   },
   "peerDependencies": {
-    "@clerk/clerk-react": "4.32.3"
+    "@clerk/clerk-react": "5.12.0"
   },
   "gitHead": "3905ed045508b861b495f8d5630d76c7a157d8f1"
 }
