@@ -653,7 +653,7 @@ test('Nested sets, and authentication logic', () => {
   })
 })
 
-test('Give correct ids to root sets', () => {
+test('gives correct ids to root sets', () => {
   const Layout = ({ children }: LayoutProps) => <>{children}</>
 
   const Routes = (

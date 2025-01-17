@@ -51,7 +51,7 @@ describe('isValidRoute', () => {
     )
   })
 
-  it("does not throws if notFoundPage doesn't have a path", () => {
+  it("does not throw if notFoundPage doesn't have a path", () => {
     // @ts-expect-error Its ok mate, we're checking the validator
     const RouteToCheck = <Route name="bazinga" notfound page={() => <></>} />
 

@@ -925,11 +925,7 @@ test('Private is an alias for Set private', async () => {
   const TestRouter = () => (
     <Router useAuth={mockUseAuth({ isAuthenticated: true })}>
       <Route path="/" page={HomePage} name="home" />
-      <Private<PrivateLayoutProps>
-        wrap={PrivateLayout}
-        unauthenticated="home"
-        theme="dark"
-      >
+      <Private wrap={PrivateLayout} unauthenticated="home" theme="dark">
         <Route path="/private" page={PrivatePage} name="private" />
       </Private>
     </Router>
@@ -1228,11 +1224,7 @@ describe('Multiple nested private sets', () => {
   const TestRouter = ({ useAuthMock }: { useAuthMock: UseAuth }) => (
     <Router useAuth={useAuthMock}>
       <Route path="/" page={HomePage} name="home" />
-      <PrivateSet<LevelLayoutProps>
-        unauthenticated="home"
-        level="1"
-        wrap={LevelLayout}
-      >
+      <PrivateSet unauthenticated="home" level="1" wrap={LevelLayout}>
         <Route
           path="/no-roles-assigned"
           page={PrivateNoRolesAssigned}
@@ -1357,7 +1349,7 @@ describe('Multiple nested sets', () => {
   const TestRouter = () => (
     <Router>
       <Route path="/" page={HomePage} name="home" />
-      <Set<DebugLayoutProps> level="1" theme="blue" wrap={DebugLayout}>
+      <Set level="1" theme="blue" wrap={DebugLayout}>
         <Route path="/level1" page={Page} name="level1" />
         <Set level="2" theme="red" otherProp="bazinga">
           <Route path="/level2" page={Page} name="level2" />
