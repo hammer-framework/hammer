@@ -1,0 +1,4 @@
+// Define your own mock data here:
+export const standard = (/* vars, { ctx, req } */) => ({
+  ${camelName}: <%= JSON.stringify(mockData[0], null, 2) %>
+})

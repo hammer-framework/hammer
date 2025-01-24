@@ -1,0 +1,14 @@
+import { render } from '@redwoodjs/testing/web'
+
+import ${pluralPascalName}Page from './${pluralPascalName}Page'
+
+//   Improve this test with help from the Redwood Testing Doc:
+//   https://redwoodjs.com/docs/testing#testing-pages-layouts
+
+describe('${pluralPascalName}Page', () => {
+  it('renders successfully', () => {
+    expect(() => {
+      render(<${pluralPascalName}Page />)
+    }).not.toThrow()
+  })
+})

@@ -15,7 +15,12 @@ export const QUERY: TypedDocumentNode<
 > = gql`
   query Find${pluralPascalName} {
     ${pluralCamelName} {<% columns.forEach(column => { %>
-      <%= column.name %><% }) %>
+      <%= column.name %><% }) %><% relations.forEach(relation => { %>
+       ${relation} {
+          id
+          # Add the ${relation} fields you need here
+        }
+    <% }) %>
     }
   }
 `

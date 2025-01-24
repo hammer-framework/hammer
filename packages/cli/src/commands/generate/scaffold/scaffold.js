@@ -43,6 +43,7 @@ import { files as sdlFiles, builder as sdlBuilder } from '../sdl/sdl'
 import {
   files as serviceFiles,
   builder as serviceBuilder,
+  buildScenario,
 } from '../service/service'
 
 // note a better way to do this is in https://github.com/redwoodjs/redwood/pull/3783/files
@@ -142,11 +143,13 @@ export const files = async ({
   docs,
   model: name,
   path: scaffoldPath = '',
-  tests = true,
+  tests,
   typescript = false,
   tailwind = false,
   force = false,
   nestScaffoldByModel,
+  stories,
+  serviceTests = true,
 }) => {
   const model = await getSchema(name)
   if (typeof nestScaffoldByModel === 'undefined') {
@@ -167,8 +170,10 @@ export const files = async ({
       name,
       pascalScaffoldPath,
       typescript,
+      tests,
       nestScaffoldByModel,
       templateStrings,
+      stories,
     )),
     ...(await sdlFiles({
       ...getDefaultArgs(sdlBuilder),
@@ -181,7 +186,7 @@ export const files = async ({
       name,
       crud: true,
       relations: relationsForModel(model),
-      tests,
+      tests: serviceTests || tests,
       typescript,
     })),
     ...(await assetFiles(name, tailwind)),
@@ -192,7 +197,9 @@ export const files = async ({
       pascalScaffoldPath,
       typescript,
       nestScaffoldByModel,
+      tests,
       templateStrings,
+      stories,
     )),
   }
 }
@@ -436,6 +443,7 @@ const modelRelatedVariables = (model) => {
     editableColumns,
     listFormattersImports,
     formattersImports,
+    relations,
   }
 }
 
@@ -496,7 +504,9 @@ const pageFiles = async (
   pascalScaffoldPath = '',
   generateTypescript,
   nestScaffoldByModel = true,
+  tests,
   templateStrings,
+  stories,
 ) => {
   const pluralName = pascalcase(pluralize(name))
   const singularName = pascalcase(singularize(name))
@@ -507,24 +517,39 @@ const pageFiles = async (
 
   let fileList = {}
 
-  const pages = fs.readdirSync(
-    customOrDefaultTemplatePath({
-      side: 'web',
-      generator: 'scaffold',
-      templatePath: 'pages',
-    }),
-  )
+  const pages = fs
+    .readdirSync(
+      customOrDefaultTemplatePath({
+        side: 'web',
+        generator: 'scaffold',
+        templatePath: 'pages',
+      }),
+    )
+    .filter((c) => {
+      if (!tests && /\.test\./.test(c)) {
+        return false
+      }
+
+      if (!stories && /\.stories\./.test(c)) {
+        return false
+      }
+
+      return true
+    })
 
   for (const page of pages) {
     // Sanitize page names
     const outputPageName = page
       .replace(/Names/, pluralName)
       .replace(/Name/, singularName)
+      .replace(/\.ts\.template/, generateTypescript ? '.ts' : '.js')
       .replace(/\.tsx\.template/, generateTypescript ? '.tsx' : '.jsx')
 
     const finalFolder =
       (nestScaffoldByModel ? singularName + '/' : '') +
-      outputPageName.replace(/\.[jt]sx?/, '')
+      outputPageName
+        .replace(/(?:\.test|\.mock|\.stories)(?=\.ts|\.js)/, '')
+        .replace(/\.[jt]sx?/, '')
 
     const outputPath = path.join(
       getPaths().web.pages,
@@ -556,12 +581,44 @@ const pageFiles = async (
   return fileList
 }
 
+/**
+ * Builds mock data for a given model.
+ *
+ * @param {Object} model - The model object containing information about the model.
+ * @param {string} model.name - The name of the model.
+ * @param {Array} model.fields - The fields of the model.
+ * @param {boolean} model.fields[].isId - Indicates if the field is an ID field.
+ * @param {string} model.fields[].type - The type of the field.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of mock data objects.
+ */
+const buildMockData = async (model) => {
+  const singularName = pascalcase(singularize(model.name))
+  const camelName = camelcase(singularName)
+  const scenario = await buildScenario(singularName)
+  const idType = getIdType(model)
+  const intMockIdValues = [42, 43, 44]
+
+  const mockIdValues =
+    idType === 'String'
+      ? intMockIdValues.map((value) => `'${value}'`)
+      : intMockIdValues
+
+  // this assumes scenario will only have two objects
+  return Object.entries(scenario[camelName]).map(([_key, value], index) => ({
+    __typename: singularName,
+    id: mockIdValues[index],
+    ...value.data,
+  }))
+}
+
 const componentFiles = async (
   name,
   pascalScaffoldPath = '',
   generateTypescript,
+  tests,
   nestScaffoldByModel = true,
   templateStrings,
+  stories,
 ) => {
   const pluralName = pascalcase(pluralize(name))
   const singularName = pascalcase(singularize(name))
@@ -572,23 +629,42 @@ const componentFiles = async (
   const intForeignKeys = intForeignKeysForModel(model)
   let fileList = {}
 
-  const components = fs.readdirSync(
-    customOrDefaultTemplatePath({
-      side: 'web',
-      generator: 'scaffold',
-      templatePath: 'components',
-    }),
-  )
+  const components = fs
+    .readdirSync(
+      customOrDefaultTemplatePath({
+        side: 'web',
+        generator: 'scaffold',
+        templatePath: 'components',
+      }),
+    )
+    .filter((c) => {
+      if (!tests && /\.test\./.test(c)) {
+        return false
+      }
+
+      if (!stories && /\.stories\./.test(c)) {
+        return false
+      }
+
+      if (!stories && !tests && /\.mock\./.test(c)) {
+        return false
+      }
+
+      return true
+    })
 
   for (const component of components) {
     const outputComponentName = component
       .replace(/Names/, pluralName)
       .replace(/Name/, singularName)
+      .replace(/\.ts\.template/, generateTypescript ? '.ts' : '.js')
       .replace(/\.tsx\.template/, generateTypescript ? '.tsx' : '.jsx')
 
     const finalFolder =
       (nestScaffoldByModel ? singularName + '/' : '') +
-      outputComponentName.replace(/\.[jt]sx?/, '')
+      outputComponentName
+        .replace(/(?:\.test|\.mock|\.stories)(?=\.ts|\.js)/, '')
+        .replace(/\.[jt]sx?/, '')
 
     const outputPath = path.join(
       getPaths().web.components,
@@ -617,6 +693,7 @@ const componentFiles = async (
         useClientDirective,
         ...templateStrings,
         ...modelRelatedVariables(model),
+        mockData: await buildMockData(model),
       },
     )
 
@@ -770,6 +847,15 @@ export const builder = (yargs) => {
       description: 'Generate test files',
       type: 'boolean',
     })
+    .option('serviceTests', {
+      description: 'Generate test files for the service',
+      type: 'boolean',
+      default: true,
+    })
+    .option('stories', {
+      description: 'Generate storybook files',
+      type: 'boolean',
+    })
     .option('tailwind', {
       description:
         'Generate TailwindCSS version of scaffold.css (automatically set to `true` if TailwindCSS config exists)',
@@ -802,6 +888,8 @@ export const tasks = ({
   typescript,
   javascript,
   tailwind,
+  stories,
+  serviceTests,
 }) => {
   return new Listr(
     [
@@ -817,6 +905,8 @@ export const tasks = ({
             javascript,
             tailwind,
             force,
+            stories,
+            serviceTests,
           })
           return writeFilesTask(f, { overwriteExisting: force })
         },
@@ -869,9 +959,17 @@ export const handler = async ({
   tailwind,
   docs = false,
   rollback,
+  stories,
+  serviceTests = true,
 }) => {
   if (tests === undefined) {
     tests = getConfig().generate.tests
+  }
+  if (stories === undefined) {
+    stories = getConfig().generate.stories
+  }
+  if (serviceTests === undefined) {
+    serviceTests = getConfig().generate.serviceTests
   }
   recordTelemetryAttributes({
     command: 'generate scaffold',
@@ -881,6 +979,8 @@ export const handler = async ({
     tailwind,
     docs,
     rollback,
+    stories,
+    serviceTests,
   })
 
   const { model, path } = splitPathAndModel(modelArg)
@@ -897,6 +997,8 @@ export const handler = async ({
       tests,
       typescript,
       tailwind,
+      stories,
+      serviceTests,
     })
     if (rollback && !force) {
       prepareForRollback(t)

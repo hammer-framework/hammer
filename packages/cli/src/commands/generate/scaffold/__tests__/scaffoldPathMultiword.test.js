@@ -22,7 +22,6 @@ describe('AdminPages/Post', () => {
     filesMultiwordUpper = await scaffold.files({
       model: 'Post',
       path: 'AdminPages',
-      tests: true,
       nestScaffoldByModel: true,
     })
   })
@@ -363,7 +362,6 @@ describe('admin-pages/Post', () => {
     filesMultiwordDash = await scaffold.files({
       model: 'Post',
       path: 'admin-pages',
-      tests: true,
       nestScaffoldByModel: true,
     })
   })
@@ -704,7 +702,6 @@ describe('admin_pages/Post', () => {
     filesMultiwordUnderscore = await scaffold.files({
       model: 'Post',
       path: 'admin_pages',
-      tests: true,
       nestScaffoldByModel: true,
     })
   })

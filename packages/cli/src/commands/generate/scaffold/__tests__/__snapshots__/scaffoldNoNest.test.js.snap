@@ -1049,6 +1049,15 @@ export const QUERY = gql\`
       upvotes
       metadata
       hugeNumber
+      favorites {
+        id
+        # Add the favorites fields you need here
+      }
+
+      tag {
+        id
+        # Add the tag fields you need here
+      }
     }
   }
 \`
@@ -2425,6 +2434,15 @@ export const QUERY: TypedDocumentNode<FindPosts, FindPostsVariables> = gql\`
       upvotes
       metadata
       hugeNumber
+      favorites {
+        id
+        # Add the favorites fields you need here
+      }
+
+      tag {
+        id
+        # Add the tag fields you need here
+      }
     }
   }
 \`

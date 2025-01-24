@@ -22,7 +22,6 @@ describe('in javascript (default) mode', () => {
     files = await scaffold.files({
       ...getDefaultArgs(defaults),
       model: 'Post',
-      tests: true,
       nestScaffoldByModel: false,
     })
   })
@@ -303,7 +302,6 @@ describe('in typescript mode', () => {
       ...getDefaultArgs(defaults),
       model: 'Post',
       typescript: true,
-      tests: true,
       nestScaffoldByModel: false,
     })
   })

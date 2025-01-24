@@ -17,6 +17,10 @@ export const QUERY: TypedDocumentNode<FindPosts, FindPostsVariables> = gql`
       body
       authorId
       createdAt
+      author {
+        id
+        # Add the author fields you need here
+      }
     }
   }
 `

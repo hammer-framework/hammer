@@ -22,7 +22,6 @@ describe('admin/post', () => {
     filesLower = await scaffold.files({
       model: 'Post',
       path: 'admin',
-      tests: true,
       nestScaffoldByModel: true,
     })
   })
@@ -353,7 +352,6 @@ describe('Admin/Post', () => {
     filesUpper = await scaffold.files({
       model: 'Post',
       path: 'Admin',
-      tests: true,
       nestScaffoldByModel: true,
     })
   })

@@ -198,6 +198,15 @@ export const QUERY = gql\`
       upvotes
       metadata
       hugeNumber
+      favorites {
+        id
+        # Add the favorites fields you need here
+      }
+
+      tag {
+        id
+        # Add the tag fields you need here
+      }
     }
   }
 \`
@@ -263,6 +272,118 @@ const ScaffoldLayout = ({
 }
 
 export default ScaffoldLayout
+"
+`;
+
+exports[`custom templates > creates a service 1`] = `
+"import type {
+  QueryResolvers,
+  MutationResolvers,
+  PostRelationResolvers,
+} from 'types/graphql'
+
+import { db } from 'src/lib/db'
+
+export const posts: QueryResolvers['posts'] = () => {
+  return db.post.findMany()
+}
+
+export const post: QueryResolvers['post'] = ({ id }) => {
+  return db.post.findUnique({
+    where: { id },
+  })
+}
+
+export const createPost: MutationResolvers['createPost'] = ({ input }) => {
+  return db.post.create({
+    data: input,
+  })
+}
+
+export const updatePost: MutationResolvers['updatePost'] = ({ id, input }) => {
+  return db.post.update({
+    data: input,
+    where: { id },
+  })
+}
+
+export const deletePost: MutationResolvers['deletePost'] = ({ id }) => {
+  return db.post.delete({
+    where: { id },
+  })
+}
+
+export const Post: PostRelationResolvers = {
+  favorites: (_obj, { root }) => {
+    return db.post.findUnique({ where: { id: root?.id } }).favorites()
+  },
+  tag: (_obj, { root }) => {
+    return db.post.findUnique({ where: { id: root?.id } }).tag()
+  },
+}
+"
+`;
+
+exports[`custom templates > creates a service test 1`] = `
+"import type { Post } from '@prisma/client'
+
+import { posts, post, createPost, updatePost, deletePost } from './posts'
+import type { StandardScenario } from './posts.scenarios'
+
+// Generated boilerplate tests do not account for all circumstances
+// and can fail without adjustments, e.g. Float.
+//           Please refer to the RedwoodJS Testing Docs:
+//       https://redwoodjs.com/docs/testing#testing-services
+// https://redwoodjs.com/docs/testing#jest-expect-type-considerations
+
+describe('posts', () => {
+  scenario('returns all posts', async (scenario: StandardScenario) => {
+    const result = await posts()
+
+    expect(result.length).toEqual(Object.keys(scenario.post).length)
+  })
+
+  scenario('returns a single post', async (scenario: StandardScenario) => {
+    const result = await post({ id: scenario.post.one.id })
+
+    expect(result).toEqual(scenario.post.one)
+  })
+
+  scenario('creates a post', async () => {
+    const result = await createPost({
+      input: {
+        title: 'String',
+        slug: 'String1234567',
+        author: 'String',
+        body: 'String',
+        metadata: { foo: 'bar' },
+      },
+    })
+
+    expect(result.title).toEqual('String')
+    expect(result.slug).toEqual('String1234567')
+    expect(result.author).toEqual('String')
+    expect(result.body).toEqual('String')
+    expect(result.metadata).toEqual({ foo: 'bar' })
+  })
+
+  scenario('updates a post', async (scenario: StandardScenario) => {
+    const original = (await post({ id: scenario.post.one.id })) as Post
+    const result = await updatePost({
+      id: original.id,
+      input: { title: 'String2' },
+    })
+
+    expect(result.title).toEqual('String2')
+  })
+
+  scenario('deletes a post', async (scenario: StandardScenario) => {
+    const original = (await deletePost({ id: scenario.post.one.id })) as Post
+    const result = await post({ id: original.id })
+
+    expect(result).toEqual(null)
+  })
+})
 "
 `;
 
@@ -1682,6 +1803,15 @@ export const QUERY = gql\`
       upvotes
       metadata
       hugeNumber
+      favorites {
+        id
+        # Add the favorites fields you need here
+      }
+
+      tag {
+        id
+        # Add the tag fields you need here
+      }
     }
   }
 \`
@@ -3524,6 +3654,15 @@ export const QUERY: TypedDocumentNode<FindPosts, FindPostsVariables> = gql\`
       upvotes
       metadata
       hugeNumber
+      favorites {
+        id
+        # Add the favorites fields you need here
+      }
+
+      tag {
+        id
+        # Add the tag fields you need here
+      }
     }
   }
 \`

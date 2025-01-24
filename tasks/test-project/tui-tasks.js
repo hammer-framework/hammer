@@ -23,7 +23,7 @@ const RW_FRAMEWORK_PATH = path.join(__dirname, '../../')
 
 function fullPath(name, { addExtension } = { addExtension: true }) {
   if (addExtension) {
-    if (name.startsWith('api')) {
+    if (name.startsWith('api') || name.endsWith('.mock')) {
       name += '.ts'
     } else if (name.startsWith('web')) {
       name += '.tsx'
@@ -737,10 +737,43 @@ export default DoublePage`
       task: async () => {
         await generateScaffold('post')
 
-        // Replace the random numbers in the scenario with consistent values
+        // Replace the random numbers in the scenario and mocks with consistent
+        // values
         await applyCodemod(
           'scenarioValueSuffix.js',
           fullPath('api/src/services/posts/posts.scenarios'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('api/src/services/posts/posts.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/EditPostCell/EditPostCell.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/NewPost/NewPost.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/Post/Post.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/PostCell/PostCell.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/PostForm/PostForm.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/Posts/Posts.mock'),
+        )
+        await applyCodemod(
+          'mockValueSuffix.js',
+          fullPath('web/src/components/Post/PostsCell/PostsCell.mock'),
         )
 
         await exec(`yarn rwfw project:copy`, [], execaOptions)

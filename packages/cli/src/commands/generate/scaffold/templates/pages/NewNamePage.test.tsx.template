@@ -1,0 +1,14 @@
+import { render } from '@redwoodjs/testing/web'
+
+import New${pascalName}Page from './New${pascalName}Page'
+
+//   Improve this test with help from the Redwood Testing Doc:
+//   https://redwoodjs.com/docs/testing#testing-pages-layouts
+
+describe('New${pascalName}Page', () => {
+  it('renders successfully', () => {
+    expect(() => {
+      render(<New${pascalName}Page ${idName}="42" />)
+    }).not.toThrow()
+  })
+})

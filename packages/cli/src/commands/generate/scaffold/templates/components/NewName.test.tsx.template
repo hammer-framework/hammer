@@ -1,0 +1,14 @@
+import { render } from '@redwoodjs/testing/web'
+
+import New${pascalName} from './New${pascalName}'
+
+//   Improve this test with help from the Redwood Testing Doc:
+//    https://redwoodjs.com/docs/testing#testing-components
+
+describe('New${pascalName}', () => {
+  it('renders successfully', () => {
+    expect(() => {
+      render(<New${pascalName} />)
+    }).not.toThrow()
+  })
+})

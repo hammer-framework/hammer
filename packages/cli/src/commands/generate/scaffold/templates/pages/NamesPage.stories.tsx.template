@@ -1,0 +1,13 @@
+import type { Meta, StoryObj } from '@storybook/react'
+
+import ${pluralPascalName}Page from './${pluralPascalName}Page'
+
+const meta: Meta<typeof ${pluralPascalName}Page> = {
+  component: ${pluralPascalName}Page,
+}
+
+export default meta
+
+type Story = StoryObj<typeof ${pluralPascalName}Page>
+
+export const Primary: Story = {}

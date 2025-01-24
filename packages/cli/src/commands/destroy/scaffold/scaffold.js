@@ -114,7 +114,7 @@ export const tasks = ({ model, path, tests, nestScaffoldByModel }) =>
 
 export const handler = async ({ model: modelArg }) => {
   recordTelemetryAttributes({
-    command: 'destory scaffold',
+    command: 'destroy scaffold',
   })
   const { model, path } = splitPathAndModel(modelArg)
   try {

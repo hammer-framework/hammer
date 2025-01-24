@@ -1,0 +1,26 @@
+// Pass props to your component by passing an `args` object to your story
+//
+// ```tsx
+// export const Primary: Story = {
+//  args: {
+//    propName: propValue
+//  }
+// }
+// ```
+//
+// See https://storybook.js.org/docs/react/writing-stories/args.
+
+import type { Meta, StoryObj } from '@storybook/react'
+
+import ${pluralPascalName} from './${pluralPascalName}'
+
+const meta: Meta<typeof ${pluralPascalName}> = {
+  component: ${pluralPascalName},
+  tags: ['autodocs']
+}
+
+export default meta
+
+type Story = StoryObj<typeof ${pluralPascalName}>
+
+export const Primary: Story = {}
