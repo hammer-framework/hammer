@@ -30,7 +30,7 @@ export function builder(yargs) {
 
 const CHAKRA_THEME_AND_COMMENTS = `\
 // This object will be used to override Chakra-UI theme defaults.
-// See https://chakra-ui.com/docs/styled-system/theming/theme for theming options
+// See https://v2.chakra-ui.com/docs/styled-system/theme for theming options
 const theme = {}
 export default theme
 `

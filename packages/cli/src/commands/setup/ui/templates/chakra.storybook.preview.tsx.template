@@ -1,20 +1,49 @@
 import * as React from 'react'
 
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import type { Preview, StoryFn } from '@storybook/react'
+import { ChakraProvider, extendTheme, useColorMode } from '@chakra-ui/react'
+import type { GlobalTypes } from '@storybook/csf'
+import type { Preview, StoryContext, StoryFn } from '@storybook/react'
+
 import theme from 'config/chakra.config'
 
 const extendedTheme = extendTheme(theme)
 
-/** @see {@link https://storybook.js.org/docs/7/essentials/toolbars-and-globals#create-a-decorator | Create a decorator} */
-const withChakra = (Story: StoryFn) => (
-  <ChakraProvider theme={extendedTheme}>
-    <Story />
-  </ChakraProvider>
-)
+/** @see {@link https://storybook.js.org/docs/7/essentials/toolbars-and-globals#global-types-and-the-toolbar-annotation | Global types and the toolbar annotation}  */
+const globalTypes: GlobalTypes = {
+  theme: {
+    description: 'Theme',
+    defaultValue: 'dark',
+    toolbar: {
+      dynamicTitle: true,
+      icon: 'contrast',
+      items: [
+        { value: 'dark', left: '🌜', title: 'Dark mode' },
+        { value: 'light', left: '🌞', title: 'Light mode' },
+      ],
+    },
+  },
+}
+
+const ColorModeSwitch = ({ colorMode }: { colorMode: 'light' | 'dark' }) => {
+  const { setColorMode } = useColorMode()
+  React.useEffect(() => setColorMode(colorMode), [colorMode, setColorMode])
+
+  return <></>
+}
+
+const withChakra = (Story: StoryFn, context: StoryContext) => {
+  extendedTheme.config.initialColorMode = context.globals.theme // avoids flash on reload for non-default color mode
+  return (
+    <ChakraProvider theme={extendedTheme}>
+      <ColorModeSwitch colorMode={context.globals.theme} />
+      <Story />
+    </ChakraProvider>
+  )
+}
 
 const preview: Preview = {
-  decorators: [withChakra]
+  decorators: [withChakra],
+  globalTypes,
 }
 
 export default preview
