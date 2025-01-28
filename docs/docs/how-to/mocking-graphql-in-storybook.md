@@ -24,11 +24,11 @@ export const QUERY = gql`
 `
 
 // UserProfileCell/UserProfileCell.mock.js
-export const standard = {
+export const standard = (/* vars, { ctx, req } */) => ({
   userProfile: {
     id: 42,
   },
-}
+})
 ```
 
 The value assigned to `standard` is the mock-data associated to the `QUERY`, so modifying the `QUERY` means you need to modify the mock-data.
@@ -38,18 +38,18 @@ export const QUERY = gql`
   query UserProfileQuery {
     userProfile {
        id
-+       name
++      name
     }
   }
 `
 
 // UserProfileCell/UserProfileCell.mock.js
-export const standard = {
+export const standard = (/* vars, { ctx, req } */) => ({
   userProfile: {
     id: 42,
-+    name: 'peterp',
++   name: 'peterp',
   }
-}
+})
 ```
 
 > Behind the scenes: Redwood uses the value associated to `standard` as the second argument to `mockGraphQLQuery`.
@@ -59,15 +59,13 @@ export const standard = {
 If you want to dynamically modify mock-data based on a queries variables the `standard` export can also be a function, and the first parameter will be an object containing the variables:
 
 ```jsx {1,6} title="UserProfileCell/UserProfileCell.mock.js"
-export const standard = (variables) => {
-  return {
-    userProfile: {
-      id: 42,
-      name: 'peterp',
-      profileImage: `https://example.com/profile.png?size=${variables.size}`,
-    },
-  }
-}
+export const standard = (variables) => ({
+  userProfile: {
+    id: 42,
+    name: 'peterp',
+    profileImage: `https://example.com/profile.png?size=${variables.size}`,
+  },
+})
 ```
 
 ## Mocking a GraphQL Query
@@ -75,17 +73,15 @@ export const standard = (variables) => {
 If you're not using a Cell, or if you want to overwrite a globally scoped mock, you can use `mockGraphQLQuery`:
 
 ```jsx title="Header/Header.stories.js"
-export const withReallyLongName = () => {
-  mockGraphQLQuery('UserProfileQuery', () => {
-    return {
-      userProfile: {
-        id: 99,
-        name: 'Hubert Blaine Wolfeschlegelsteinhausenbergerdorff Sr.'
-      }
+export const withReallyLongName = () => ({
+  mockGraphQLQuery('UserProfileQuery', () => ({
+    userProfile: {
+      id: 99,
+      name: 'Hubert Blaine Wolfeschlegelsteinhausenbergerdorff Sr.'
     }
-  })
+  }))
   return <Header />
-}
+})
 ```
 
 ## Mocking a GraphQL Mutation
@@ -96,14 +92,12 @@ Use `mockGraphQLMutation`:
 export const standard =
   /* ... */
 
-  mockGraphQLMutation('UpdateUserName', ({ name }) => {
-    return {
-      userProfile: {
-        id: 99,
-        name,
-      },
-    }
-  })
+  mockGraphQLMutation('UpdateUserName', ({ name }) => ({
+    userProfile: {
+      id: 99,
+      name,
+    },
+  }))
 ```
 
 ## Mock-requests that intentionally produce errors
