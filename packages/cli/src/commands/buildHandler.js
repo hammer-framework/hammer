@@ -49,7 +49,6 @@ export const handler = async ({
         const { cmd, args } = generatePrismaCommand(rwjsPaths.api.dbSchema)
         return execa(cmd, args, {
           stdio: verbose ? 'inherit' : 'pipe',
-          shell: true,
           cwd: rwjsPaths.api.base,
         })
       },
@@ -103,12 +102,14 @@ export const handler = async ({
         // so that users don't have to see it when this command is called with --verbose
         process.env.VITE_CJS_IGNORE_WARNING = 'true'
         await execa(
-          `node ${require.resolve(
-            '@redwoodjs/vite/bins/rw-vite-build.mjs',
-          )} --webDir="${rwjsPaths.web.base}" --verbose=${verbose}`,
+          'node',
+          [
+            require.resolve('@redwoodjs/vite/bins/rw-vite-build.mjs'),
+            `--webDir=${path.resolve(rwjsPaths.web.base)}`,
+            `--verbose=${verbose}`,
+          ],
           {
             stdio: verbose ? 'inherit' : 'pipe',
-            shell: true,
             // `cwd` is needed for yarn to find the rw-vite-build binary
             // It won't change process.cwd for anything else here, in this
             // process
@@ -146,9 +147,8 @@ export const handler = async ({
 
     // Running a separate process here, otherwise it wouldn't pick up the
     // generated Prisma Client due to require module caching
-    await execa('yarn rw prerender', {
+    await execa('yarn', ['rw', 'prerender'], {
       stdio: 'inherit',
-      shell: true,
       cwd: rwjsPaths.web.base,
     })
   }

@@ -22,8 +22,12 @@ export const generatePrismaCommand = (schema) => {
   }
 
   return {
-    cmd: `node "${require.resolve('prisma/build/index.js')}"`,
-    args: ['generate', schema && `--schema="${schema}"`],
+    cmd: `node`,
+    args: [
+      require.resolve('prisma/build/index.js'),
+      'generate',
+      schema && `--schema=${schema}`,
+    ],
   }
 }
 
