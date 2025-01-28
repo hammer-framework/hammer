@@ -54,7 +54,7 @@
   "devDependencies": {
     "@redwoodjs/framework-tools": "workspace:*",
     "@supabase/ssr": "0.5.1",
-    "@supabase/supabase-js": "2.45.4",
+    "@supabase/supabase-js": "2.48.1",
     "@types/react": "^18.2.55",
     "concurrently": "8.2.2",
     "publint": "0.2.12",
@@ -64,7 +64,7 @@
     "vitest": "2.0.5"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "2.45.4"
+    "@supabase/supabase-js": "2.48.1"
   },
   "gitHead": "3905ed045508b861b495f8d5630d76c7a157d8f1"
 }
