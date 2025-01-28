@@ -143,13 +143,41 @@ export const beforeQuery = (props) => {
 
 For example, if you wanted to turn on Apollo's polling option, and prevent caching, you could export something like this (see Apollo's docs on [polling](https://www.apollographql.com/docs/react/data/queries/#polling) and [caching](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy))
 
+<Tabs groupId="js-ts">
+<TabItem value="js" label="JavaScript">
+ 
 ```jsx
 export const beforeQuery = (props) => {
-  return { variables: props, fetchPolicy: 'no-cache', pollInterval: 2500 }
+  return {
+    variables: props,
+    fetchPolicy: 'no-cache',
+    pollInterval: 2500
+  }
 }
 ```
 
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```jsx
+export const beforeQuery = (
+  props
+): GraphQLQueryHookOptions<FindBlogPostQuery, FindBlogPostQueryVariables> => {
+  return {
+    variables: props,
+    fetchPolicy: 'no-cache',
+    pollInterval: 2500
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
 You can also use `beforeQuery` to populate variables with data not included in the Cell's props (like from React's Context API or a global state management library). If you provide a `beforeQuery` function, the Cell will automatically change the type of its props to match the first argument of the function.
+
+<Tabs groupId="js-ts">
+<TabItem value="js" label="JavaScript">
 
 ```jsx
 // The Cell will take no props: <Cell />
@@ -162,14 +190,53 @@ export const beforeQuery = () => {
 }
 ```
 
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```jsx
+// The Cell will take no props: <Cell />
+export const beforeQuery = (): GraphQLQueryHookOptions<
+  ArticlesQuery, ArticlesQueryVariables
+> => {
+  const { currentUser } = useAuth()
+
+  return {
+    variables: { userId: currentUser.id },
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+<Tabs groupId="js-ts">
+<TabItem value="js" label="JavaScript">
+
 ```jsx
 // The cell will take 1 prop named "word" that is a string: <Cell word="abc">
-export const beforeQuery = ({ word }: { word: string }) => {
+export const beforeQuery = ({ word }) => {
+  return {
+    variables: { magicWord: word },
+  }
+}
+```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```jsx
+// The cell will take 1 prop named "word" that is a string: <Cell word="abc">
+export const beforeQuery = (
+  { word }: { word: string }
+): GraphQLQueryHookOptions<FindBlogPostQuery, FindBlogPostQueryVariables> => {
   return {
     variables: { magicWord: word }
    }
 }
 ```
+
+</TabItem>
+</Tabs>
 
 ### isEmpty
 
