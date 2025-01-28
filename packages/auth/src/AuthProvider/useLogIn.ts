@@ -7,35 +7,12 @@ import { spaDefaultAuthProviderState } from './AuthProviderState.js'
 import type { useCurrentUser } from './useCurrentUser.js'
 import { useReauthenticate } from './useReauthenticate.js'
 
-export const useLogIn = <
-  TUser,
-  TRestoreAuth,
-  TLogInOptions,
-  TLogIn,
-  TLogOutOptions,
-  TLogOut,
-  TSignUpOptions,
-  TSignUp,
-  TForgotPassword,
-  TResetPasswordOptions,
-  TResetPassword,
-  TValidateResetToken,
-  TClient,
->(
+export const useLogIn = <TUser, TRestoreAuth, TLogInOptions, TLogIn>(
   authImplementation: AuthImplementation<
     TUser,
     TRestoreAuth,
     TLogInOptions,
-    TLogIn,
-    TLogOutOptions,
-    TLogOut,
-    TSignUpOptions,
-    TSignUp,
-    TForgotPassword,
-    TResetPasswordOptions,
-    TResetPassword,
-    TValidateResetToken,
-    TClient
+    TLogIn
   >,
   setAuthProviderState: React.Dispatch<
     React.SetStateAction<AuthProviderState<TUser>>

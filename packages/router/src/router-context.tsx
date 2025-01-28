@@ -18,6 +18,7 @@ type UseAuth = () => AuthContextInterface<
   unknown,
   unknown,
   unknown,
+  unknown,
   unknown
 >
 

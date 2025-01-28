@@ -7,6 +7,7 @@ export interface AuthImplementation<
   TLogOut = unknown,
   TSignUpOptions = unknown,
   TSignUp = unknown,
+  TGetTokenOptions = unknown,
   TForgotPassword = unknown,
   TResetPasswordOptions = unknown,
   TResetPassword = unknown,
@@ -20,7 +21,7 @@ export interface AuthImplementation<
   login(options?: TLogInOptions): Promise<TLogIn>
   logout(options?: TLogOutOptions): Promise<TLogOut>
   signup(options?: TSignUpOptions): Promise<TSignUp>
-  getToken(): Promise<string | null>
+  getToken(options?: TGetTokenOptions): Promise<string | null>
   forgotPassword?(username: string): Promise<TForgotPassword>
   resetPassword?(options?: TResetPasswordOptions): Promise<TResetPassword>
   validateResetToken?(token: string | null): Promise<TValidateResetToken>

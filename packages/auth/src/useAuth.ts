@@ -10,6 +10,7 @@ export function createUseAuth<
   TLogOut,
   TSignUpOptions,
   TSignUp,
+  TGetTokenOptions,
   TForgotPassword,
   TResetPasswordOptions,
   TResetPassword,
@@ -25,6 +26,7 @@ export function createUseAuth<
         TLogOut,
         TSignUpOptions,
         TSignUp,
+        TGetTokenOptions,
         TForgotPassword,
         TResetPasswordOptions,
         TResetPassword,
@@ -42,6 +44,7 @@ export function createUseAuth<
     TLogOut,
     TSignUpOptions,
     TSignUp,
+    TGetTokenOptions,
     TForgotPassword,
     TResetPasswordOptions,
     TResetPassword,
@@ -62,6 +65,7 @@ export function createUseAuth<
 
 export function useNoAuth(): AuthContextInterface<
   null,
+  void,
   void,
   void,
   void,
@@ -96,6 +100,7 @@ export function useNoAuth(): AuthContextInterface<
 }
 
 export type UseAuth = () => AuthContextInterface<
+  unknown,
   unknown,
   unknown,
   unknown,

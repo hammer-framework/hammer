@@ -12,6 +12,7 @@ export interface AuthContextInterface<
   TLogOut,
   TSignUpOptions,
   TSignUp,
+  TGetTokenOptions,
   TForgotPassword,
   TResetPasswordOptions,
   TResetPassword,
@@ -51,7 +52,7 @@ export interface AuthContextInterface<
    * Clients should always return null or string
    * It is expected that they catch any errors internally
    */
-  getToken(): Promise<null | string>
+  getToken(options?: TGetTokenOptions): Promise<null | string>
   /**
    * Fetches the "currentUser" from the api side,
    * but does not update the current user state.
@@ -89,6 +90,7 @@ export function createAuthContext<
   TLogOut,
   TSignUpOptions,
   TSignUp,
+  TGetTokenOptions,
   TForgotPassword,
   TResetPasswordOptions,
   TResetPassword,
@@ -104,6 +106,7 @@ export function createAuthContext<
         TLogOut,
         TSignUpOptions,
         TSignUp,
+        TGetTokenOptions,
         TForgotPassword,
         TResetPasswordOptions,
         TResetPassword,

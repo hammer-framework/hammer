@@ -15,11 +15,6 @@ export const useSignUp = <
   TLogOut,
   TSignUpOptions,
   TSignUp,
-  TForgotPassword,
-  TResetPasswordOptions,
-  TResetPassword,
-  TValidateResetToken,
-  TClient,
 >(
   authImplementation: AuthImplementation<
     TUser,
@@ -29,12 +24,7 @@ export const useSignUp = <
     TLogOutOptions,
     TLogOut,
     TSignUpOptions,
-    TSignUp,
-    TForgotPassword,
-    TResetPasswordOptions,
-    TResetPassword,
-    TValidateResetToken,
-    TClient
+    TSignUp
   >,
   setAuthProviderState: React.Dispatch<
     React.SetStateAction<AuthProviderState<TUser>>
