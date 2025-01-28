@@ -5,10 +5,11 @@ import { Listr } from 'listr2'
 
 import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
 
-import { getPaths, writeFile } from '../../../../lib'
+import { getPaths, transformTSToJS, writeFile } from '../../../../lib'
 import c from '../../../../lib/colors'
 import extendStorybookConfiguration from '../../../../lib/configureStorybook.js'
 import { extendJSXFile, fileIncludes } from '../../../../lib/extendFile'
+import { isTypeScriptProject } from '../../../../lib/project'
 
 export const command = 'chakra-ui'
 export const description = 'Set up Chakra UI'
@@ -29,10 +30,12 @@ export function builder(yargs) {
 }
 
 const CHAKRA_THEME_AND_COMMENTS = `\
+import type { ChakraTheme, DeepPartial, extendTheme } from '@chakra-ui/react'
+
 // This object will be used to override Chakra-UI theme defaults.
 // See https://chakra-ui.com/docs/styled-system/theming/theme for theming options
-const theme = {}
-export default theme
+const theme: DeepPartial<ChakraTheme> = {}
+export default extendTheme(theme)
 `
 
 export async function handler({ force, install }) {
@@ -77,23 +80,29 @@ export async function handler({ force, install }) {
           extendJSXFile(rwPaths.web.app, {
             insertComponent: {
               name: 'ChakraProvider',
-              props: { theme: 'extendedTheme' },
+              props: { theme: 'theme' },
               within: 'RedwoodProvider',
               insertBefore: '<ColorModeScript />',
             },
             imports: [
-              "import { ChakraProvider, ColorModeScript, extendTheme } from '@chakra-ui/react'",
+              "import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'",
               "import * as theme from 'config/chakra.config'",
             ],
-            moduleScopeLines: ['const extendedTheme = extendTheme(theme)'],
           }),
       },
       {
         title: `Creating Theme File...`,
-        task: () => {
+        task: async () => {
+          const isTs = isTypeScriptProject()
+          const themeFilePath = path.join(
+            rwPaths.web.config,
+            `chakra.config.${isTs ? 'ts' : 'js'}`,
+          )
           writeFile(
-            path.join(rwPaths.web.config, 'chakra.config.js'),
-            CHAKRA_THEME_AND_COMMENTS,
+            themeFilePath,
+            isTs
+              ? CHAKRA_THEME_AND_COMMENTS
+              : await transformTSToJS(themeFilePath, CHAKRA_THEME_AND_COMMENTS),
             { overwriteExisting: force },
           )
         },
