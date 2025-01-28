@@ -2279,10 +2279,12 @@ yarn redwood upgrade -t 0.19.3
 
 The CLI can check for things in the background, like new versions of the framework, while you dev.
 
-Right now it can only check for new versions.
-If you'd like it to do so, set `notifications.versionUpdates` in the `redwood.toml` file to include an array of the tags you're interested in hearing about.
-(The former has priority.)
+Right now it defaults to check for a new `latest` version.
+To customize this behavior - perhaps by checking for `rc` (release candidate) or other tags - set `notifications.versionUpdates` in the `redwood.toml` file to include an array of the tags you're interested in.
+Tags listed earlier in the array have priority.
 
-By default, the CLI won't check for upgrades—you have to opt into it.
+You can opt out of the background check process.
 
-You'll see this notification once a day at most. And the CLI will check for it once a day at most. So, nothing heavy-handed going on here.
+You'll see this notification once a day at most. And the CLI will check for an upgrade once a day, at most. So, nothing heavy-handed going on here.
+
+For more details, see the [TOML configuration section in the documentation](app-configuration-redwood-toml.md#cli).

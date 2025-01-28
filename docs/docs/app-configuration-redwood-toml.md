@@ -165,7 +165,10 @@ These options allows you to disable the generation of test and story files.
 There are new versions of the framework all the time—a major every couple months, a minor every week or two, and patches when appropriate.
 And if you're on an experimental release line, like canary, there's new versions every day, multiple times.
 
-If you'd like to get notified (at most, once a day) when there's a new version, set `versionUpdates` to include the version tags you're interested in.
+If you'd like to get notified (at most, once a day) when there's a new version, set `versionUpdates` to an array of the version tags you're interested in (tags listed earlier take priority).
+While you can specify any tag, common options include: `latest`, `canary`, `next`, or `rc`.
+
+To opt out of background version checks entirely, simply remove the `versionUpdates` option, comment it out, or set its value to an empty array `[""]`.
 
 ## Using Environment Variables in `redwood.toml`
 
