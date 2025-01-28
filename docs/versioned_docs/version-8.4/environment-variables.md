@@ -118,6 +118,30 @@ Navigating to http://localhost:8911/hello shows that the Function successfully a
 Whichever platform you deploy to, they'll have some specific way of making environment variables available to the serverless environment where your Functions run. For example, if you deploy to Netlify, you set your environment variables in **Settings** > **Build & Deploy** > **Environment**. You'll just have to read your provider's documentation.
 Some hosting providers distinguish between build and runtime environments for configuring environment variables. Environment variables for the api side should in those cases be configured as runtime variables.
 
+## Loading additional `.env` files for different environments
+
+Need to run a `yarn rw` command using custom environment variables? Redwood got you covered: the `--load-env-files` flag allows to load additional `.env.*` files into the command's execution context, for example:
+
+```shell
+$ yarn rw test api --load-env-files test
+```
+
+This will load `.env.test` and then run Jest to execute all tests for the api side. This way you could inject different `TEST_DATABASE_URL="…"` – for example in your integration test stack – or overwrite particular environment variables relevant for test execution. Note that you `.env.defaults` and `.env` will still be processed (in that order) before `.env.test`.
+
+The `--load-env-files` CLI option can also load multiple files:
+
+```shell
+$ yarn rw exec migrateUsers --load-env-files stripe nakama
+```
+
+This will load the environment variables from `.env.stripe` and `.env.nakama` and then execute `scripts/migrateUsers.ts`. **Important**: Values defined in files specified later override earlier ones. That means, if `.env.stripe` contains `FOO="BAR"` and `.env.nakama` contains `FOO="BAZ"`, `echo $FOO` (or `process.env.FOO`) will give `BAZ` in the execution context of `migrateUsers.ts`.
+
+:::note `--load-env-files` always comes last
+
+As this CLI option accepts multiple inputs (which actually transpire to an array of inputs under the hood), the current implementation cannot distinct where the last input ends and a potential next option starts. For example, `yarn rw --load-env-files test test api` will load `.env.test` (twice 🤡) and `.env.api`, failing with an error if either one does not exist. Therefore, ensure you always use `--load-env-files` as the last option in CLI commands.
+
+:::
+
 ## Keeping Sensitive Information Safe
 
 Since it usually contains sensitive information, you should [never commit your `.env` file](https://github.com/motdotla/dotenv#should-i-commit-my-env-file). Note that you'd actually have to go out of your way to do this as, by default, a Redwood app's `.gitignore` explicitly ignores `.env`:
@@ -137,16 +161,16 @@ yarn-error.log
 
 For all the variables in your `.env` and `.env.defaults` files to make their way to `process.env`, there has to be a call to `dotenv`'s `config` function somewhere. So where is it?
 
-It's in [the CLI](https://github.com/redwoodjs/redwood/blob/main/packages/cli/src/index.js#L6-L12)&mdash;every time you run a `yarn rw` command:
+It's in [the CLI](https://github.com/redwoodjs/redwood/blob/v8.4.2/packages/cli-helpers/src/lib/loadEnvFiles.ts#L35-L43)&mdash;every time you run a `yarn rw` command:
 
-```jsx title="packages/cli/src/index.js"
-import { config } from 'dotenv-defaults'
-
-config({
-  path: path.join(getPaths().base, '.env'),
-  encoding: 'utf8',
-  defaults: path.join(getPaths().base, '.env.defaults'),
-})
+```ts title="packages/cli/src/lib/loadEnvFiles.js"
+export function loadDefaultEnvFiles(cwd: string) {
+  dotenvDefaultsConfig({
+    path: path.join(cwd, '.env'),
+    defaults: path.join(cwd, '.env.defaults'),
+    multiline: true,
+  })
+}
 ```
 
 Remember, if `yarn rw dev` is already running, your local app won't reflect any changes you make to your `.env` file until you stop and re-run `yarn rw dev`.
