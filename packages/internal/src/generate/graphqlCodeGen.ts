@@ -285,7 +285,7 @@ async function getPluginConfig(side: CodegenSide) {
     | 'File'
   const scalars: Partial<Record<ScalarKeys, string>> = {
     // We need these, otherwise these scalars are mapped to any
-    BigInt: 'number',
+    BigInt: 'bigint',
     // @Note: DateTime fields can be valid Date-strings, or the Date object in the api side. They're always strings on the web side.
     DateTime: side === CodegenSide.WEB ? 'string' : 'Date | string',
     Date: side === CodegenSide.WEB ? 'string' : 'Date | string',

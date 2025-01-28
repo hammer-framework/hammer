@@ -4,6 +4,10 @@ import humanize from 'humanize-string'
 
 const MAX_STRING_LENGTH = 150
 
+export const bigIntDisplay = (value: bigint) => {
+  return value.toString()
+}
+
 export const formatEnum = (values: string | string[] | null | undefined) => {
   let output = ''
 
@@ -25,7 +29,7 @@ export const jsonDisplay = (obj: unknown) => {
   )
 }
 
-export const truncate = (value: string | number) => {
+export const truncate = (value: string | number | bigint) => {
   let output = value?.toString() ?? ''
 
   if (output.length > MAX_STRING_LENGTH) {

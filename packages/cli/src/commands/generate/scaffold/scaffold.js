@@ -311,6 +311,11 @@ const modelRelatedVariables = (model) => {
       listDisplayFunction: 'formatEnum',
       displayFunction: 'formatEnum',
     },
+    BigInt: {
+      componentName: 'TextField',
+      displayFunction: 'bigIntDisplay',
+      listDisplayFunction: 'truncate',
+    },
     Boolean: {
       componentName: 'CheckboxField',
       defaultProp: 'defaultChecked',

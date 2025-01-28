@@ -32,7 +32,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  BigInt: number;
+  BigInt: bigint;
   Byte: Buffer;
   Date: Date | string;
   DateTime: Date | string;
@@ -328,7 +328,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  BigInt: number;
+  BigInt: bigint;
   Byte: Buffer;
   Date: string;
   DateTime: string;
