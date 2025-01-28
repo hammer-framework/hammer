@@ -50,7 +50,7 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@prisma/client": "5.20.0",
+    "@prisma/client": "6.2.0",
     "@whatwg-node/fetch": "0.9.21",
     "cookie": "1.0.2",
     "humanize-string": "2.1.0",

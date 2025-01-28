@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.25.7",
-    "@prisma/internals": "5.20.0",
+    "@prisma/internals": "6.2.0",
     "@redwoodjs/cli-helpers": "workspace:*",
     "@simplewebauthn/browser": "7.4.0",
     "core-js": "3.38.1",
