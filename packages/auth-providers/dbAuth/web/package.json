@@ -36,7 +36,7 @@
     "@types/react": "^18.2.55",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
-    "react": "19.0.0-rc-f2df5694-20240916",
+    "react": "19.0.0",
     "typescript": "5.6.2"
   },
   "gitHead": "3905ed045508b861b495f8d5630d76c7a157d8f1"
