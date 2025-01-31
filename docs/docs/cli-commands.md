@@ -875,6 +875,7 @@ This also updates `Routes.js` in `./web/src`.
 | -------------------- | ------------------------------------------------------------------------------------ |
 | `name`               | Name of the page                                                                     |
 | `path`               | URL path to the page. Defaults to `name`                                             |
+| `{parameters}`       | Optional. Include the URL parameters when generating the page.                       |
 | `--force, -f`        | Overwrite existing files                                                             |
 | `--typescript, --ts` | Generate TypeScript files Enabled by default if we detect your project is TypeScript |
 | `--tests`            | Generate test files [default: true]                                                  |
